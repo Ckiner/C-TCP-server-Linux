@@ -54,5 +54,6 @@ int main(int argc, char * argv[]) {
     char * message = "Hello world!";
     send(connfd, message, strlen(message), 0);
     close(sockfd);
+    close(connfd);
     return 0;
 }
