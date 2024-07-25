@@ -18,10 +18,19 @@ struct sockaddr_in createSockAddr(char * address, unsigned short port, short fam
 }
 
 int main(int argc, char * argv[]) {
-    const int MAX_BACKLOG = 10;  // The amount of connections that can be pending acceptance.
+    if (atoi(argv[3]) < 0) {
+        printf("Invalid backlog argument. Must be a positive integer.\n");
+        return 1;
+    }
+    const int MAX_BACKLOG = atoi(argv[3]);  // The amount of connections that can be pending acceptance.
     const short FAMILY = AF_INET;
-    const char * ADDRESS = "127.0.0.1";
-    const unsigned short PORT = 1337;
+    const char * ADDRESS = argv[1];
+
+    if (atoi(argv[2]) < 0) {
+        printf("Invalid port argument. Must be a positive integer.\n");
+        return 1;
+    }
+    const unsigned short PORT = (unsigned short)atoi(argv[2]);
 
     int sockfd = socket(FAMILY, SOCK_STREAM, 0);
 
