@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "server.h"
+#include "signalhandler.h"
+
+int sockfd;
 
 int validateArgs(int argc, char * argv[]) {
     if (argc < 4 || atoi(argv[3]) < 0 || atoi(argv[2]) < 0) {
@@ -22,7 +25,7 @@ int main(int argc, char * argv[]) {
     const char * ADDRESS = argv[1];
     const unsigned short PORT = (unsigned short)atoi(argv[2]);
 
-    int sockfd = socket(FAMILY, SOCK_STREAM, 0);
+    sockfd = socket(FAMILY, SOCK_STREAM, 0);
 
     if (sockfd == -1) {
         printf("Error creating socket.\n");
@@ -45,7 +48,10 @@ int main(int argc, char * argv[]) {
         printf("Error setting the socket to listening mode.\n");
         return 1;
     }
-
+    if (signalHandlerSetup() == -1) {
+        printf("Error setting up the signal handler.\n");
+        return 1;
+    }
     acceptConnections(sockfd);
 
     return 0;
