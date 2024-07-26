@@ -1,11 +1,9 @@
 #include "server.h"
 
-
 void acceptConnections(int sockfd) {
     struct sockaddr_in connaddr;
     socklen_t connsize = sizeof(struct sockaddr_in);
 
-    char * message = "Hello world!";
     int count = 0;
     while (count < 3) {
         int connfd = accept(sockfd, (struct sockaddr *)&connaddr, &connsize);
@@ -14,7 +12,8 @@ void acceptConnections(int sockfd) {
             continue;
         }
         else {
-            handleConnection(connfd);
+            pthread_t threadID;
+            pthread_create(&threadID, NULL, handleConnection, &connfd);
             count++;
         }
     }
@@ -22,7 +21,9 @@ void acceptConnections(int sockfd) {
     return NULL;
 }
 
-void handleConnection(int connfd) {
+void * handleConnection(void * args) {
+    int connfd = *((int *)args);
+    char * message = "Hello world!";
     send(connfd, message, strlen(message), 0);
     close(connfd);
 }

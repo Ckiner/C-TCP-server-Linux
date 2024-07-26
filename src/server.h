@@ -10,6 +10,6 @@
 #include <pthread.h>
 
 void acceptConnections(int);
-void handleConnection(int);
+void * handleConnection(void *);
 
 #endif
