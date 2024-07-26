@@ -1,26 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include "server.h"
 
 void acceptConnections(int sockfd) {
     struct sockaddr_in connaddr;
     socklen_t connsize = sizeof(struct sockaddr_in);
-    int connfd = accept(sockfd, (struct sockaddr *)&connaddr, &connsize);
-
-    if (connfd == -1) {
-        printf("Error connecting to socket.\n");
-        return 1;
-    }
-
 
     char * message = "Hello world!";
-    send(connfd, message, strlen(message), 0);
-    close(connfd);
+    int count = 0;
+    while (count < 3) {
+        int connfd = accept(sockfd, (struct sockaddr *)&connaddr, &connsize);
+
+        if (connfd == -1) {
+            continue;
+        }
+        else {
+            send(connfd, message, strlen(message), 0);
+            close(connfd);
+            count++;
+        }
+    }
+    close(sockfd);
+    return NULL;
 }
 
 int main(int argc, char * argv[]) {
@@ -67,6 +68,6 @@ int main(int argc, char * argv[]) {
     }
 
     acceptConnections(sockfd);
-    close(sockfd);
+
     return 0;
 }
