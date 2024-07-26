@@ -3,7 +3,7 @@
 #include "server.h"
 
 int validateArgs(int argc, char * argv[]) {
-    if (argc < 4 || atoi(argv[3]) < 0 || ato(argv[2]) < 0) {
+    if (argc < 4 || atoi(argv[3]) < 0 || atoi(argv[2]) < 0) {
         return 1;
     }
 
@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     if (argsNotValid) {
         return 1;
     }
-    
+
     const int MAX_BACKLOG = atoi(argv[3]);  // The amount of connections that can be pending acceptance.
     const short FAMILY = AF_INET;
     const char * ADDRESS = argv[1];
