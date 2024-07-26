@@ -39,7 +39,12 @@ void * handleConnection(void * args) {
     int count = 0;
     char * message = "abc";
     while (count < 10) {
-        send(connfd, message, strlen(message), 0);
+        send(connfd, message, strlen(message), MSG_NOSIGNAL);
+        if (errno == EPIPE) {
+            removeConnection(connectionList, connfd);
+            close(connfd);
+            break;
+        }
         sleep(3);
         count++;
     }

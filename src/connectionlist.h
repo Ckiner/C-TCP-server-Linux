@@ -12,5 +12,6 @@ List createList();
 int isEmpty(List);
 void addConnection(List, int *);
 int popConnection(List);
+void removeConnection(List, int);
 
-#endif;
+#endif

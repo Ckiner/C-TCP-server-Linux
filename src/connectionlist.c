@@ -48,3 +48,21 @@ int popConnection(List list) {
     free(first);
     return val;
 }
+
+void removeConnection(List list, int connfd) {
+    // Removes the first occurrence of connfd from the list.
+    if (list) {
+        List cur = list;
+        while (cur->next) {
+            if (*(cur->next->connfd) == connfd) {
+                List tgt = cur->next;
+                cur->next = tgt->next;
+                free(tgt->connfd);
+                free(tgt);
+                break;
+            }
+            cur = cur->next;
+        }
+    }
+
+}
