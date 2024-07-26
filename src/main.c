@@ -2,24 +2,24 @@
 #include <stdlib.h>
 #include "server.h"
 
+int validateArgs(int argc, char * argv[]) {
+    if (argc < 4 || atoi(argv[3]) < 0 || ato(argv[2]) < 0) {
+        return 1;
+    }
+
+    return 0;
+}
 
 int main(int argc, char * argv[]) {
-    if (argc < 4) {
-        printf("Please specify all arguments.\n ./{filename} {address} {port} {maximum backlog}\n");
+    int argsNotValid = validateArgs(argc, argv);
+
+    if (argsNotValid) {
         return 1;
     }
-    if (atoi(argv[3]) < 0) {
-        printf("Invalid backlog argument. Must be a positive integer.\n");
-        return 1;
-    }
+    
     const int MAX_BACKLOG = atoi(argv[3]);  // The amount of connections that can be pending acceptance.
     const short FAMILY = AF_INET;
     const char * ADDRESS = argv[1];
-
-    if (atoi(argv[2]) < 0) {
-        printf("Invalid port argument. Must be a positive integer.\n");
-        return 1;
-    }
     const unsigned short PORT = (unsigned short)atoi(argv[2]);
 
     int sockfd = socket(FAMILY, SOCK_STREAM, 0);
