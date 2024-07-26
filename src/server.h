@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
+#include "connectionlist.h"
 
 void acceptConnections(int);
 void * handleConnection(void *);

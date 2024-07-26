@@ -5,6 +5,7 @@
 #include "server.h"
 
 extern int sockfd;
+extern List connectionList;
 
 void cleanup(int);
 int signalHandlerSetup();

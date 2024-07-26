@@ -1,25 +1,46 @@
 #include "server.h"
 
+List connectionList;
+
 void acceptConnections(int sockfd) {
+    connectionList = createList();
+    if (!connectionList) {
+        printf("Error creating the connection list.\n");
+        close(sockfd);
+        exit(0);
+    }
+
+    int * connfd;
     struct sockaddr_in connaddr;
     socklen_t connsize = sizeof(struct sockaddr_in);
 
     while (1) {
-        int connfd = accept(sockfd, (struct sockaddr *)&connaddr, &connsize);
+        connfd = (int *)malloc(sizeof(int));
+        if (!connfd) {
+            continue;
+        }
 
-        if (connfd == -1) {
+        *connfd = accept(sockfd, (struct sockaddr *)&connaddr, &connsize);
+
+        if (*connfd == -1) {
+            free(connfd);
             continue;
         }
         else {
+            addConnection(connectionList, connfd);
             pthread_t threadID;
-            pthread_create(&threadID, NULL, handleConnection, &connfd);
+            pthread_create(&threadID, NULL, handleConnection, connfd);
         }
     }
 }
 
 void * handleConnection(void * args) {
     int connfd = *((int *)args);
-    char * message = "Hello world!";
-    send(connfd, message, strlen(message), 0);
-    close(connfd);
+    int count = 0;
+    char * message = "abc";
+    while (count < 10) {
+        send(connfd, message, strlen(message), 0);
+        sleep(3);
+        count++;
+    }
 }
